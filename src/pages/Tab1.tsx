@@ -1,6 +1,6 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonChip, IonLabel } from '@ionic/react';
-// import ExploreContainer from '../components/ExploreContainer';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonChip, IonLabel, IonIcon } from '@ionic/react';
+import { arrowUpOutline } from 'ionicons/icons';
 import './Tab1.css';
 
 const Tab1: React.FC = () => {
@@ -21,13 +21,22 @@ const Tab1: React.FC = () => {
         <div className={"padding"}>
           <h3 className={"section-title"}>Worldwide statistics</h3>
 
-          <IonChip>
-            <IonLabel color="secondary">Cases</IonLabel>
+          <IonChip outline={true}>
+            <IonLabel color="default" >Cases</IonLabel>
           </IonChip>
 
           <IonChip>
-            <IonLabel color="secondary">Deaths</IonLabel>
+            <IonLabel color="danger">Deaths</IonLabel>
           </IonChip>
+
+          <div className={"stats"}>
+            <div className={"trend"}>
+              <IonIcon icon={arrowUpOutline} /> <span>+4.2%</span>
+            </div>
+
+            <h1>1.07M</h1>
+            <span>deaths related to COVID-19</span>
+          </div>
         </div>
       </IonContent>
     </IonPage>
