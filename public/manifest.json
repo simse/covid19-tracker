@@ -1,6 +1,6 @@
 {
-  "short_name": "Ionic App",
-  "name": "My Ionic App",
+  "short_name": "COVID-19 Tracker",
+  "name": "COVID-19 Tracker",
   "icons": [
     {
       "src": "assets/icon/favicon.png",
