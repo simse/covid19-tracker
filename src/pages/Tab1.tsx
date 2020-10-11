@@ -1,6 +1,6 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonChip, IonLabel } from '@ionic/react';
+// import ExploreContainer from '../components/ExploreContainer';
 import './Tab1.css';
 
 const Tab1: React.FC = () => {
@@ -8,16 +8,27 @@ const Tab1: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Tab 1</IonTitle>
+          <IonTitle>Dashboard</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Tab 1</IonTitle>
+            <IonTitle size="large">Dashboard</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <ExploreContainer name="Tab 1 page" />
+        
+        <div className={"padding"}>
+          <h3 className={"section-title"}>Worldwide statistics</h3>
+
+          <IonChip>
+            <IonLabel color="secondary">Cases</IonLabel>
+          </IonChip>
+
+          <IonChip>
+            <IonLabel color="secondary">Deaths</IonLabel>
+          </IonChip>
+        </div>
       </IonContent>
     </IonPage>
   );
