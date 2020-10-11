@@ -12,8 +12,8 @@ import {
 import { IonReactRouter } from '@ionic/react-router';
 import { informationOutline, earthOutline, homeOutline } from 'ionicons/icons';
 import Tab1 from './pages/Tab1';
-import Countries from './pages/Countries';
-//import Country from "./pages/Country"
+import CountryList from './pages/Countries';
+import Country from "./pages/Country"
 import Tab3 from './pages/Tab3';
 
 /* Core CSS required for Ionic components to work properly */
@@ -41,16 +41,18 @@ const App: React.FC = () => (
       <IonTabs>
         <IonRouterOutlet>
           <Route path="/tab1" component={Tab1} exact={true} />
-          <Route path="/countries" component={Countries} />
           <Route path="/tab3" component={Tab3} />
+          <Route path={"/:tab(countries)"} component={CountryList} exact={true} />
+          <Route path={`/:tab(countries)/:id`} component={Country} />
           <Route path="/" render={() => <Redirect to="/tab1" />} exact={true} />
         </IonRouterOutlet>
+
         <IonTabBar slot="bottom">
           <IonTabButton tab="tab1" href="/tab1">
             <IonIcon icon={homeOutline} />
             <IonLabel>Home</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab2" href="/countries">
+          <IonTabButton tab="countries" href="/countries">
             <IonIcon icon={earthOutline} />
             <IonLabel>Countries</IonLabel>
           </IonTabButton>

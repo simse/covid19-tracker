@@ -1,0 +1,33 @@
+.countries {
+    font-weight: 700;
+    width: 100%;
+
+    ion-list {
+        width: 100%;
+    }
+
+    .placeholder-image {
+        width: 45px;
+        height: 45px;
+        background: rgba(255, 255, 255, 0.1);
+        margin-right: 10px;
+    }
+
+    ion-label {
+        width: 80%;
+    }
+
+    .flag {
+        width: 45px;
+        height: 45px;
+        margin-right: 10px;
+    }
+
+    .country-item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+    }
+}
+

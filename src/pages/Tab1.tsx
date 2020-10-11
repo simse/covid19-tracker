@@ -1,11 +1,11 @@
 import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonChip, IonLabel, IonIcon } from '@ionic/react';
 import { arrowUpOutline } from 'ionicons/icons';
-import './Tab1.css';
+import './Tab1.scss';
 
 const Tab1: React.FC = () => {
   return (
-    <IonPage>
+    <IonPage className={"dashboard"}>
       <IonHeader>
         <IonToolbar>
           <IonTitle>Dashboard</IonTitle>
