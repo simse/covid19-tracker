@@ -1,6 +1,6 @@
 import React from 'react';
 import { match } from "react-router-dom";
-import { IonContent, IonHeader, IonPage, IonToolbar, IonButtons, IonBackButton, IonIcon, IonSegment, IonSegmentButton, IonLabel } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonToolbar, IonButtons, IonBackButton, IonIcon, IonSegment, IonSegmentButton, IonLabel, IonSkeletonText } from '@ionic/react';
 import { arrowUpOutline, arrowDownOutline } from 'ionicons/icons';
 import "../styles/country.scss";
 import Chart from 'chart.js';
@@ -18,6 +18,7 @@ interface IState {
   countryIso: string;
   country: CountryData;
   view: string;
+  loading: boolean;
 }
 
 interface CountryParent {
@@ -63,7 +64,8 @@ class Country extends React.Component<IProps, IState> {
         this.state = {
           view: "statistics",
           countryIso: props.match.params.id,
-          country: {}
+          country: {},
+          loading: true
         }
       }
     }
@@ -82,7 +84,8 @@ class Country extends React.Component<IProps, IState> {
         (result) => {
           //this.setLoadingState(true)
           this.setState({
-            country: result
+            country: result,
+            loading: false
           })
 
           this.drawAllGraphs()
@@ -176,8 +179,14 @@ class Country extends React.Component<IProps, IState> {
   }
 
   getTotalCasesGraph() {
-    if(this.state.country.graph_cases) {
-      return this.generateGraphDataset(this.intervalDataSet(this.state.country.graph_cases, 5))
+    if(this.state.country.graph_cases && this.state.country.total_cases) {
+      let interval = 4;
+
+      if (this.state.country.total_cases < 1000) {
+        interval = 1
+      }
+
+      return this.generateGraphDataset(this.intervalDataSet(this.state.country.graph_cases, interval))
     }
   }
 
@@ -217,7 +226,7 @@ class Country extends React.Component<IProps, IState> {
 
   getCountryFlag(iso?: string) {
     if (iso) {
-      return require("../assets/flags/" + iso + ".svg")
+      return require("../assets/flags/" + iso.toLowerCase() + ".svg")
     } else {
       return require("../assets/flags/dk.svg")
     }
@@ -256,6 +265,10 @@ class Country extends React.Component<IProps, IState> {
       return (
         <span className="parent">Part of {this.state.country.parent.formal_name}</span>
       )
+    } else if(this.state.country.parent?.name) {
+      return (
+        <span className="parent">Part of {this.state.country.parent.name}</span>
+      )
     }
   }
 
@@ -278,8 +291,8 @@ class Country extends React.Component<IProps, IState> {
               className={"flag"}
               alt={"The flag of " + this.state.country.name}
             />
-
-            <h2>{this.state.country.name}</h2>
+            {this.state.loading && <IonSkeletonText animated></IonSkeletonText>}
+            {!this.state.loading && <h2>{this.state.country.name}</h2>}
             {this.showParent()}
           </div>
 

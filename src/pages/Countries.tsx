@@ -1,6 +1,7 @@
 import React from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonList, IonLabel, IonSkeletonText } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonList, IonLabel, IonSkeletonText, IonSearchbar } from '@ionic/react';
 
+import Fuse from 'fuse.js';
 import "../styles/countries.scss";
 
 
@@ -16,7 +17,7 @@ interface Country {
 interface IState {
   countries: Array<Country>;
   hasLoaded?: boolean;
-  searchTerm?: string;
+  searchTerm: string;
 }
 
 class Countries extends React.Component<IProps, IState> {
@@ -26,7 +27,8 @@ class Countries extends React.Component<IProps, IState> {
     this.state = {
       countries: [],
       hasLoaded: false,
-      searchTerm: ""
+      searchTerm: "",
+
     }
   }
 
@@ -56,7 +58,39 @@ class Countries extends React.Component<IProps, IState> {
         () => {
           this.setLoadingState(false)
         }
-      )
+      )      
+  }
+
+  getFilteredCountries(): Array<Country> {
+    if (this.state.searchTerm === "") {
+      return this.state.countries
+    } else {
+      const options = {
+        includeScore: true,
+        keys: ['name']
+      }
+
+      const countryIndex = new Fuse(this.state.countries, options)
+      let result: Array<Country> = []
+
+      countryIndex.search(this.state.searchTerm).forEach(country => {
+        result.push(country.item)
+      })
+
+      return result
+    }
+  }
+
+  getCountryFlag(iso?: string) {
+    if (iso) {
+      try {
+        return require("../assets/flags/" + iso.toLowerCase() + ".svg")
+      } catch(e) {
+        return require("../assets/flags/dk.svg")
+      }
+    } else {
+      return require("../assets/flags/dk.svg")
+    }
   }
 
   renderListOfCountries() {
@@ -65,10 +99,10 @@ class Countries extends React.Component<IProps, IState> {
 
   
           <IonList>
-            {this.state.countries.map(country => (
+            {this.getFilteredCountries().map(country => (
               <IonItem routerLink={"/countries/" + country["iso3166-2"]} key={country["iso3166-2"]}>
                 <div className="country-item">
-                  <img src={require("../assets/flags/" + country["iso3166-2"] + ".svg")} className={"flag"} alt={"The flag of " + country.name} />
+                  <img src={this.getCountryFlag(country["iso3166-2"])} className={"flag"} alt={"The flag of " + country.name} />
   
                   <IonLabel>{country.name}</IonLabel>
                 </div>
@@ -77,6 +111,12 @@ class Countries extends React.Component<IProps, IState> {
           </IonList>
       ) 
     }
+  }
+
+  setSearchTerm(term: string) {
+    this.setState({
+      searchTerm: term
+    })
   }
 
   render() {
@@ -93,7 +133,7 @@ class Countries extends React.Component<IProps, IState> {
               <IonTitle size="large">Countries</IonTitle>
             </IonToolbar>
           </IonHeader>
-  
+          <IonSearchbar value={this.state.searchTerm} onIonChange={e => this.setSearchTerm(e.detail.value!)}></IonSearchbar>
 
           <div className={"countries"}>
             {!this.state.hasLoaded &&

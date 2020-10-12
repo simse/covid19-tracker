@@ -31,11 +31,19 @@
             /*border: 2px solid rgba(255, 255, 255, 0.8);
             border-radius: 100px;*/
         }
+
+        ion-skeleton-text {
+            width: 50%;
+            height: 28px;
+            margin: 20px;
+        }
     
         h2 {
             font-size: 1.8rem;
             margin-top: 20px;
             font-weight: 300;
+            text-align: center;
+            padding: 0 10px;
         }
 
         span.parent {
