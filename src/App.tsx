@@ -36,7 +36,7 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 
 const App: React.FC = () => (
-  <IonApp>
+  <IonApp style={{maxWidth: 600, margin: "0 auto"}}>
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
