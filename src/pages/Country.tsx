@@ -358,6 +358,12 @@ class Country extends React.Component<IProps, IState> {
             <h3 className={"section-title"}>COVID-19 related deaths past 30 days</h3>
             <canvas ref={this.pastMonthDeathsGraph} />
           </div>}
+
+          <div className={"source"}>
+            <span>Source: {this.state.country.source}</span>
+
+            <span>Last updated: {this.state.country.last_update}</span>
+          </div>
         </IonContent>
       </IonPage>
     );

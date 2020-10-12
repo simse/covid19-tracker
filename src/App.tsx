@@ -7,10 +7,11 @@ import {
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
-  IonTabs
+  IonTabs,
+  setupConfig
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { informationOutline, earthOutline, homeOutline } from 'ionicons/icons';
+import { information, earth, home } from 'ionicons/icons';
 import Tab1 from './pages/Tab1';
 import CountryList from './pages/Countries';
 import Country from "./pages/Country"
@@ -35,6 +36,11 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
+setupConfig({
+  swipeBackEnabled: false,
+  statusTap: true
+})
+
 const App: React.FC = () => (
   <IonApp style={{maxWidth: 600, margin: "0 auto"}}>
     <IonReactRouter>
@@ -49,15 +55,15 @@ const App: React.FC = () => (
 
         <IonTabBar slot="bottom">
           <IonTabButton tab="tab1" href="/tab1">
-            <IonIcon icon={homeOutline} />
+            <IonIcon icon={home} />
             <IonLabel>Home</IonLabel>
           </IonTabButton>
           <IonTabButton tab="countries" href="/countries">
-            <IonIcon icon={earthOutline} />
+            <IonIcon icon={earth} />
             <IonLabel>Countries</IonLabel>
           </IonTabButton>
           <IonTabButton tab="tab3" href="/tab3">
-            <IonIcon icon={informationOutline} />
+            <IonIcon icon={information} />
             <IonLabel>About</IonLabel>
           </IonTabButton>
         </IonTabBar>
