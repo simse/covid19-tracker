@@ -121,7 +121,7 @@ class Countries extends React.Component<IProps, IState> {
 
   render() {
     return (
-      <IonPage>
+      <IonPage className={"countries"}>
         <IonHeader>
           <IonToolbar>
             <IonTitle>Countries</IonTitle>
@@ -135,7 +135,7 @@ class Countries extends React.Component<IProps, IState> {
           </IonHeader>
           <IonSearchbar value={this.state.searchTerm} onIonChange={e => this.setSearchTerm(e.detail.value!)}></IonSearchbar>
 
-          <div className={"countries"}>
+          <div>
             {!this.state.hasLoaded &&
             
               <IonList>

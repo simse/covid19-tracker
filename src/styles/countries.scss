@@ -3,6 +3,11 @@
     width: 100%;
     padding-bottom: 50px;
 
+    ion-toolbar {
+        --border-width: 0 0 0 0 !important;
+        --background: rgba(0, 0, 0, 1) !important;
+    }
+
     ion-list {
         width: 100%;
     }
