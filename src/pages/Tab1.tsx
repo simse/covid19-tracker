@@ -77,7 +77,7 @@ class Tab1 extends React.Component<IProps, IState> {
     if (favoritedCountries) {
       let favCountriesJson: Array<string> = JSON.parse(favoritedCountries)
 
-      if (favCountriesJson.length > 1) {
+      if (favCountriesJson.length > 0) {
         return favCountriesJson.map(countryIso => (
           <>
             <CondensedCountry countryIso={countryIso} key={countryIso} />
