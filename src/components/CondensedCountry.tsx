@@ -124,7 +124,7 @@ class CondensedCountry extends React.Component<IProps, IState> {
 
     render() {
         return (
-            <Link to={"/countries/" + this.state.countryIso} style={{textDecoration: "none", color: "initial"}}>
+            <Link to={"/countries/" + this.state.countryIso} style={{textDecoration: "none", color: "#fff"}}>
                 <div className={"condensed-country"} >
                     <div className={"image"}>
                         { this.getCountryFlag() }
