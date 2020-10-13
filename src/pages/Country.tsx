@@ -1,7 +1,26 @@
 import React from 'react';
 import { match } from "react-router-dom";
-import { IonContent, IonHeader, IonPage, IonToolbar, IonButtons, IonBackButton, IonIcon, IonSegment, IonSegmentButton, IonLabel, IonSkeletonText } from '@ionic/react';
-import { arrowUpOutline, arrowDownOutline } from 'ionicons/icons';
+import { 
+  IonContent, 
+  IonHeader, 
+  IonPage, 
+  IonToolbar, 
+  IonButtons, 
+  IonBackButton, 
+  IonIcon, 
+  IonSegment, 
+  IonSegmentButton, 
+  IonLabel, 
+  IonSkeletonText, 
+  IonButton, 
+  IonToast 
+} from '@ionic/react';
+import { 
+  arrowUpOutline, 
+  arrowDownOutline, 
+  star, 
+  starOutline 
+} from 'ionicons/icons';
 import "../styles/country.scss";
 import Chart from 'chart.js';
 
@@ -19,11 +38,8 @@ interface IState {
   country: CountryData;
   view: string;
   loading: boolean;
-}
-
-interface CountryParent {
-  name?: string;
-  formal_name?: string;
+  isFavorite: boolean;
+  favoritedToastShown: boolean;
 }
 
 interface CountryData {
@@ -40,7 +56,7 @@ interface CountryData {
   graph_deaths?: Array<number>;
   name?: string;
   formal_name?: string;
-  parent?: CountryParent;
+  subtitle?: string;
   iso?: string;
 }
 
@@ -65,7 +81,9 @@ class Country extends React.Component<IProps, IState> {
           view: "statistics",
           countryIso: props.match.params.id,
           country: {},
-          loading: true
+          loading: true,
+          isFavorite: false,
+          favoritedToastShown: false
         }
       }
     }
@@ -85,7 +103,8 @@ class Country extends React.Component<IProps, IState> {
           //this.setLoadingState(true)
           this.setState({
             country: result,
-            loading: false
+            loading: false,
+            isFavorite: this.isCountryFavorited()
           })
 
           this.drawAllGraphs()
@@ -98,6 +117,7 @@ class Country extends React.Component<IProps, IState> {
         }
       )
 
+    // Set chart font family
     Chart.defaults.global.defaultFontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"';
   }
 
@@ -179,8 +199,8 @@ class Country extends React.Component<IProps, IState> {
   }
 
   getTotalCasesGraph() {
-    if(this.state.country.graph_cases && this.state.country.total_cases) {
-      let interval = 4;
+    if (this.state.country.graph_cases && this.state.country.total_cases) {
+      let interval = 3;
 
       if (this.state.country.total_cases < 1000) {
         interval = 1
@@ -191,13 +211,13 @@ class Country extends React.Component<IProps, IState> {
   }
 
   getTotalDeathsGraph() {
-    if(this.state.country.graph_deaths) {
+    if (this.state.country.graph_deaths) {
       return this.generateGraphDataset(this.intervalDataSet(this.state.country.graph_deaths, 5))
     }
   }
 
   getCasesPastMonthGraph() {
-    if(this.state.country.graph_cases) {
+    if (this.state.country.graph_cases) {
       let pastMonth = this.state.country.graph_cases.slice(Math.max(this.state.country.graph_cases.length - 30, 0))
 
       return this.generateGraphDataset(pastMonth)
@@ -205,7 +225,7 @@ class Country extends React.Component<IProps, IState> {
   }
 
   getDeathsPastMonthGraph() {
-    if(this.state.country.graph_deaths) {
+    if (this.state.country.graph_deaths) {
       let pastMonth = this.state.country.graph_deaths.slice(Math.max(this.state.country.graph_deaths.length - 30, 0))
 
       return this.generateGraphDataset(pastMonth)
@@ -224,13 +244,23 @@ class Country extends React.Component<IProps, IState> {
     }
   }
 
-  getCountryFlag(iso?: string) {
-    if (iso) {
-      return require("../assets/flags/" + iso.toLowerCase() + ".svg")
+  getCountryFlag() {
+    if (this.state.country.iso) {
+      return (
+        <img
+          src={require("../assets/flags/" + this.state.country.iso.toLowerCase() + ".svg")}
+          className={"flag"}
+          alt={"The flag of " + this.state.country.name}
+        />
+      )
     } else {
-      return require("../assets/flags/dk.svg")
+      return (
+        <div className="temp-flag"></div>
+      )
     }
   }
+
+  
 
   formatTrend(trend?: number) {
     if (trend) {
@@ -261,15 +291,85 @@ class Country extends React.Component<IProps, IState> {
   }
 
   showParent() {
-    if (this.state.country.parent?.formal_name) {
+    if (this.state.country.subtitle) {
       return (
-        <span className="parent">Part of {this.state.country.parent.formal_name}</span>
-      )
-    } else if(this.state.country.parent?.name) {
-      return (
-        <span className="parent">Part of {this.state.country.parent.name}</span>
+        <span className="parent">{this.state.country.subtitle}</span>
       )
     }
+  }
+
+  getFavoriteStar() {
+    let starIcon = starOutline
+
+    if (this.state.isFavorite) {
+      starIcon = star
+    }
+
+    return (
+      <IonIcon slot="icon-only" icon={starIcon} />
+    )
+  }
+
+  isCountryFavorited() {
+    let favoritedCountries = localStorage.getItem("favorited_countries")
+    if (favoritedCountries) {
+      let favCountriesJson = JSON.parse(favoritedCountries)
+
+      return favCountriesJson.includes(this.state.countryIso)
+    }
+
+    return false
+  }
+
+  addFavoriteToStorage() {
+    let favoritedCountries = localStorage.getItem("favorited_countries")
+    let favCountriesJson
+
+    if (favoritedCountries) {
+      favCountriesJson = JSON.parse(favoritedCountries)
+      favCountriesJson.push(this.state.country.iso)
+    } else {
+      favCountriesJson = [this.state.country.iso]
+    }
+
+    localStorage.setItem("favorited_countries", JSON.stringify(favCountriesJson))
+  }
+
+  removeCountryFromStorage() {
+    let favoritedCountries = localStorage.getItem("favorited_countries")
+    let favCountriesJson: Array<string>
+
+    if (favoritedCountries) {
+      favCountriesJson = JSON.parse(favoritedCountries)
+
+      localStorage.setItem("favorited_countries", JSON.stringify(favCountriesJson.filter(item => item !== this.state.country.iso)))
+    }
+  }
+
+  toggleFavorite() {
+    if (this.state.isFavorite) {
+      this.removeCountryFromStorage()
+
+      this.setState({
+        isFavorite: false
+      })
+
+      this.setShowFavoritedToast(false)
+    } else {
+      this.addFavoriteToStorage()
+
+      this.setState({
+        isFavorite: true
+      })
+
+      this.setShowFavoritedToast(true)
+    }
+  }
+
+  setShowFavoritedToast(isShown: boolean) {
+    this.setState({
+      favoritedToastShown: isShown
+    })
   }
 
   render() {
@@ -280,17 +380,24 @@ class Country extends React.Component<IProps, IState> {
             <IonButtons slot="start">
               <IonBackButton />
             </IonButtons>
+
+            <IonButtons slot="end">
+              <IonButton onClick={() => this.toggleFavorite()}>
+                {this.getFavoriteStar()}
+              </IonButton>
+            </IonButtons>
           </IonToolbar>
         </IonHeader>
         <IonContent fullscreen>
-
+          <IonToast
+            isOpen={this.state.favoritedToastShown}
+            onDidDismiss={() => this.setShowFavoritedToast(false)}
+            message={this.state.country.name + " has been added to favorites"}
+            duration={1500}
+          />
 
           <div className={"header"}>
-            <img
-              src={this.getCountryFlag(this.state.country.iso)}
-              className={"flag"}
-              alt={"The flag of " + this.state.country.name}
-            />
+            {this.getCountryFlag()}
             {this.state.loading && <IonSkeletonText animated></IonSkeletonText>}
             {!this.state.loading && <h2>{this.state.country.name}</h2>}
             {this.showParent()}

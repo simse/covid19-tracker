@@ -1,0 +1,38 @@
+.condensed-country {
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    padding: 15px 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+
+    .image {
+        .flag {
+            height: 60px;
+            width: 60px;
+            margin-right: 12px;
+        }
+    }
+
+    .meta {
+        h3 {
+            margin: 0 0 8px 0;
+        }
+
+        span.cases {
+            font-weight: 700;
+
+            &.good {
+                color: var(--ion-color-success-shade)
+            }
+
+            &.bad {
+                color: var(--ion-color-danger-shade)
+            }
+
+            ion-icon {
+                margin-bottom: -2px;
+            }
+        }
+    }
+}

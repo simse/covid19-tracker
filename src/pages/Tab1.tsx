@@ -1,6 +1,9 @@
 import React from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonIcon } from '@ionic/react';
 import { arrowUpOutline, arrowDownOutline } from 'ionicons/icons';
+
+import CondensedCountry from "../components/CondensedCountry"
+
 import './Tab1.scss';
 
 interface IProps {}
@@ -69,6 +72,23 @@ class Tab1 extends React.Component<IProps, IState> {
     return Math.round(num / 10000) / 100 + "M"
   }
 
+  getFavorites() {
+    let favoritedCountries = localStorage.getItem("favorited_countries")
+    if (favoritedCountries) {
+      let favCountriesJson: Array<string> = JSON.parse(favoritedCountries)
+
+      if (favCountriesJson.length > 1) {
+        return favCountriesJson.map(countryIso => (
+          <>
+            <CondensedCountry countryIso={countryIso} key={countryIso} />
+          </>
+        ))
+      }      
+    }
+
+    return (<p className="no-favorites">No favorited countries yet</p>)
+  }
+
   render() {
     return (
       <IonPage className={"dashboard"}>
@@ -100,6 +120,12 @@ class Tab1 extends React.Component<IProps, IState> {
               <h1>{ this.formatNumber(this.state.globalDeaths) }</h1>
               <span>deaths related to COVID-19</span>
             </div>
+          </div>
+
+          <div className={"padding"}>
+            <h3 className={"section-title"}>Your favorites</h3>
+
+            {this.getFavorites()}
           </div>
         </IonContent>
       </IonPage>
