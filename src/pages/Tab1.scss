@@ -26,8 +26,15 @@
         display: flex;
         font-weight: 700;
         align-items: center;
-        color: var(--ion-color-danger);
         font-family: 'Courier New', Courier, monospace;
+
+        &.good {
+            color: var(--ion-color-success-shade);
+        }
+
+        &.bad {
+            color: var(--ion-color-danger-shade);
+        }
     }
     
     .stats .trend ion-icon {

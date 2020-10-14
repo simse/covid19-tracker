@@ -81,30 +81,20 @@ class CondensedCountry extends React.Component<IProps, IState> {
     }
 
     abbreviateNumber(value?: number) {
-        if (!value) {
+        if (!value || value < 1) {
             return "0"
         }
 
         // var newValue = value;
-        let formattedNumber: string = value.toString(2);
-
-        if (value >= 1000) {
-            var suffixes = ["", "K", "M", "B","T"];
-            var suffixNum = Math.floor( (""+value).length/3 );
-            var shortValue: number = 0;
-            for (var precision = 2; precision >= 1; precision--) {
-                shortValue = parseFloat( (suffixNum !== 0 ? (value / Math.pow(1000,suffixNum) ) : value).toPrecision(precision));
-                var dotLessShortValue = (shortValue + '').replace(/[^a-zA-Z 0-9]+/g,'');
-                if (dotLessShortValue.length <= 2) { break; }
-            }
-
-            let stringNumber = shortValue.toFixed(1)
-
-            if (shortValue % 1 !== 0)  stringNumber = shortValue.toFixed(1);
-            formattedNumber = stringNumber + suffixes[suffixNum];
+        if (value >= 100 && value < 1000000) {
+            return (value / 1000).toFixed(1) + "K"
         }
 
-        return formattedNumber;
+        if (value >= 1000000) {
+            return (value / 1000000).toFixed(2) + "M"
+        }
+
+        // return formattedNumber;
     }
 
     getCountryCases() {
